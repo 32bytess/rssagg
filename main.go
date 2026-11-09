@@ -2,27 +2,45 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"os"
 
 	"github.com/32bytess/rss-agg/internal/config"
 )
 
+type state struct {
+	config *config.Config
+}
+
 func main() {
 	cfg, err := config.Read()
 	if err != nil {
-		log.Fatalf("Read err: %v", err)
-		return
+		fmt.Printf("Read err: %v\n", err)
+		os.Exit(1)
 	}
-	if err := cfg.SetUser("lane"); err != nil {
-		log.Fatalf("SetUser err: %v", err)
-		return
+	st := state{
+		config: &cfg,
+	}
+	cmds := commands{
+		handlerFunctions: map[string]func(*state, command) error{},
+	}
+	cmds.register("login", handlerLogin)
+	args := os.Args
+
+	if len(args) < 2 {
+		fmt.Printf("err: Not enough args\n")
+
+		os.Exit(1)
+	}
+	cmd := command{
+		name: args[1],
+		args: args[2:],
 	}
 
-	c, err := config.Read()
+	err = cmds.run(&st, cmd)
 	if err != nil {
-		log.Fatalf("Read 2 err: %v", err)
-		return
+		fmt.Printf("err: %v\n", err)
+		os.Exit(1)
+
 	}
-	fmt.Printf("db_url: %s\n", c.DBURL)
-	fmt.Printf("username: %s\n", c.CurrentUserName)
+	os.Exit(0)
 }
