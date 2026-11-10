@@ -16,3 +16,9 @@ where
 
 -- name: DeleteAllUsers :exec
 delete from users;
+
+-- name: GetUsers :many
+select
+  *
+from
+  users;

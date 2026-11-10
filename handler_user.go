@@ -68,3 +68,22 @@ func handlerReset(s *state, cmd command) error {
 	fmt.Println("reset db was successful")
 	return nil
 }
+
+func handlerUsers(s *state, cmd command) error {
+	if len(cmd.args) != 0 {
+		return errors.New("the users handler expects no argument")
+	}
+	users, err := s.db.GetUsers(context.Background())
+	if err != nil {
+		return errors.New("getting users failed")
+	}
+
+	for i := range users {
+		name := users[i].Name.String
+		if name == s.config.CurrentUserName {
+			name += " (current)"
+		}
+		fmt.Printf("* %s\n", name)
+	}
+	return nil
+}
