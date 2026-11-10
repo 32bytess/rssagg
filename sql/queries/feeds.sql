@@ -5,3 +5,12 @@ values
   ($1, $2, $3, $4, $5, $6)
 returning
   *;
+
+-- name: GetFeeds :many
+select
+  f.name,
+  f.url,
+  u.name as username
+from
+  feeds as f
+  left join users u on f.user_id = u.id;

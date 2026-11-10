@@ -129,3 +129,19 @@ func handlerAddFeed(s *state, cmd command) error {
 	fmt.Println(feed)
 	return nil
 }
+
+func handlerFeeds(s *state, cmd command) error {
+	if len(cmd.args) != 0 {
+		return errors.New("the feeds handler expects no argument")
+	}
+	feeds, err := s.db.GetFeeds(context.Background())
+	if err != nil {
+		return err
+	}
+	for _, feed := range feeds {
+		fmt.Printf("- %s\n", feed.Name)
+		fmt.Printf("\turl: %s\n", feed.Url)
+		fmt.Printf("\tuser: %s\n", feed.Username.String)
+	}
+	return nil
+}
