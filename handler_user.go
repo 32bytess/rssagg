@@ -101,3 +101,31 @@ func handlerAgg(s *state, cmd command) error {
 	fmt.Println(*feed)
 	return nil
 }
+
+func handlerAddFeed(s *state, cmd command) error {
+	if len(cmd.args) != 2 {
+		return errors.New("the addfeed handler expects 2 argument, feedname and url")
+	}
+	name := cmd.args[0]
+	url := cmd.args[1]
+	user, err := s.db.GetUser(context.Background(), sql.NullString{
+		String: s.config.CurrentUserName, Valid: true,
+	})
+	if err != nil {
+		return err
+	}
+	feedParams := database.CreateFeedParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Name:      name,
+		Url:       url,
+		UserID:    user.ID,
+	}
+	feed, err := s.db.CreateFeed(context.Background(), feedParams)
+	if err != nil {
+		return err
+	}
+	fmt.Println(feed)
+	return nil
+}
