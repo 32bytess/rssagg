@@ -14,3 +14,11 @@ select
 from
   feeds as f
   left join users u on f.user_id = u.id;
+
+-- name: GetFeedByURL :one
+select
+  *
+from
+  feeds
+where
+  url = $1;
