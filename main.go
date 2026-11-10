@@ -16,6 +16,8 @@ type state struct {
 	db     *database.Queries
 }
 
+const testURL = "https://www.wagslane.dev/index.xml"
+
 func main() {
 	cfg, err := config.Read()
 	if err != nil {
@@ -40,6 +42,7 @@ func main() {
 	cmds.register("register", handlerRegister)
 	cmds.register("reset", handlerReset)
 	cmds.register("users", handlerUsers)
+	cmds.register("agg", handlerAgg)
 	args := os.Args
 
 	if len(args) < 2 {

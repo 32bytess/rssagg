@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/32bytess/rss-agg/internal/database"
+	"github.com/32bytess/rss-agg/internal/rssapi"
 	"github.com/google/uuid"
 )
 
@@ -85,5 +86,18 @@ func handlerUsers(s *state, cmd command) error {
 		}
 		fmt.Printf("* %s\n", name)
 	}
+	return nil
+}
+
+func handlerAgg(s *state, cmd command) error {
+
+	if len(cmd.args) != 0 {
+		return errors.New("the agg handler expects no argument")
+	}
+	feed, err := rssapi.FetchFeed(context.Background(), testURL)
+	if err != nil {
+		return nil
+	}
+	fmt.Println(*feed)
 	return nil
 }
