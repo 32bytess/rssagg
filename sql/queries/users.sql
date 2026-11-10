@@ -13,3 +13,6 @@ from
   users
 where
   name = $1;
+
+-- name: DeleteAllUsers :exec
+delete from users;

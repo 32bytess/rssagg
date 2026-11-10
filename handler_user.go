@@ -56,3 +56,15 @@ func handlerRegister(s *state, cmd command) error {
 	fmt.Printf("created at: %v\n", user.CreatedAt)
 	return nil
 }
+
+func handlerReset(s *state, cmd command) error {
+	if len(cmd.args) != 0 {
+		return errors.New("the reset handler expects no argument")
+	}
+	err := s.db.DeleteAllUsers(context.Background())
+	if err != nil {
+		return errors.New("reseting db failed")
+	}
+	fmt.Println("reset db was successful")
+	return nil
+}
