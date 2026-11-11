@@ -30,9 +30,8 @@ func main() {
 		Config: &cfg,
 		DB:     database.New(db),
 	}
-	cmds := cli.Commands{
-		HandlerFunctions: map[string]func(*app.State, cli.Command) error{},
-	}
+	cmds := cli.NewCommands()
+	// register commands
 	cmds.Register("login", cli.HandlerLogin)
 	cmds.Register("register", cli.HandlerRegister)
 	cmds.Register("reset", cli.HandlerReset)
@@ -42,21 +41,22 @@ func main() {
 	cmds.Register("feeds", cli.HandlerFeeds)
 	cmds.Register("follow", cli.HandlerFollow)
 	cmds.Register("following", cli.HandlerFollowing)
+
+	// get args (user input)
 	args := os.Args
 
 	if len(args) < 2 {
-		fmt.Printf("err: Not enough args\n")
+		fmt.Println("Usage: ./rss-agg <command>")
 		os.Exit(1)
 	}
+	// create new command
 	cmd := cli.Command{
 		Name: args[1],
 		Args: args[2:],
 	}
-
 	err = cmds.Run(&st, cmd)
 	if err != nil {
-		fmt.Printf("err: %v\n", err)
+		fmt.Printf("Err %v\n", err)
 		os.Exit(1)
 	}
-	os.Exit(0)
 }

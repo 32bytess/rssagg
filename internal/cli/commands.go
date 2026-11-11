@@ -23,6 +23,13 @@ func (c *Commands) Run(s *app.State, cmd Command) error {
 	return callback(s, cmd)
 }
 
+func NewCommands() *Commands {
+	c := Commands{
+		HandlerFunctions: map[string]func(*app.State, Command) error{},
+	}
+	return &c
+}
+
 func (c *Commands) Register(name string, f func(*app.State, Command) error) {
 	c.HandlerFunctions[name] = f
 }
