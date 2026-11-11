@@ -5,18 +5,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/32bytess/rss-agg/internal/app"
+	"github.com/32bytess/rss-agg/internal/cli"
 	"github.com/32bytess/rss-agg/internal/config"
 	"github.com/32bytess/rss-agg/internal/database"
 
 	_ "github.com/lib/pq"
 )
-
-type state struct {
-	config *config.Config
-	db     *database.Queries
-}
-
-const testURL = "https://www.wagslane.dev/index.xml"
 
 func main() {
 	cfg, err := config.Read()
@@ -31,37 +26,36 @@ func main() {
 		fmt.Printf("db err: %v\n", err)
 		os.Exit(1)
 	}
-	st := state{
-		config: &cfg,
-		db:     database.New(db),
+	st := app.State{
+		Config: &cfg,
+		DB:     database.New(db),
 	}
-	cmds := commands{
-		handlerFunctions: map[string]func(*state, command) error{},
+	cmds := cli.Commands{
+		HandlerFunctions: map[string]func(*app.State, cli.Command) error{},
 	}
-	cmds.register("login", handlerLogin)
-	cmds.register("register", handlerRegister)
-	cmds.register("reset", handlerReset)
-	cmds.register("users", handlerUsers)
-	cmds.register("agg", handlerAgg)
-	cmds.register("addfeed", handlerAddFeed)
-	cmds.register("feeds", handlerFeeds)
-	cmds.register("follow", handlerFollow)
+	cmds.Register("login", cli.HandlerLogin)
+	cmds.Register("register", cli.HandlerRegister)
+	cmds.Register("reset", cli.HandlerReset)
+	cmds.Register("users", cli.HandlerUsers)
+	cmds.Register("agg", cli.HandlerAgg)
+	cmds.Register("addfeed", cli.HandlerAddFeed)
+	cmds.Register("feeds", cli.HandlerFeeds)
+	cmds.Register("follow", cli.HandlerFollow)
 	args := os.Args
 
 	if len(args) < 2 {
 		fmt.Printf("err: Not enough args\n")
 		os.Exit(1)
 	}
-	cmd := command{
-		name: args[1],
-		args: args[2:],
+	cmd := cli.Command{
+		Name: args[1],
+		Args: args[2:],
 	}
 
-	err = cmds.run(&st, cmd)
+	err = cmds.Run(&st, cmd)
 	if err != nil {
 		fmt.Printf("err: %v\n", err)
 		os.Exit(1)
-
 	}
 	os.Exit(0)
 }

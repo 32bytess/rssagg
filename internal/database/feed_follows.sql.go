@@ -7,7 +7,6 @@ package database
 
 import (
 	"context"
-	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -46,7 +45,7 @@ type CreateFeedFollowRow struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	FeedName  string
-	UserName  sql.NullString
+	UserName  string
 }
 
 func (q *Queries) CreateFeedFollow(ctx context.Context, arg CreateFeedFollowParams) (CreateFeedFollowRow, error) {
