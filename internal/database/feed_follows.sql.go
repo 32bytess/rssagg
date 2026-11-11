@@ -66,3 +66,54 @@ func (q *Queries) CreateFeedFollow(ctx context.Context, arg CreateFeedFollowPara
 	)
 	return i, err
 }
+
+const getFeedFollowsForUser = `-- name: GetFeedFollowsForUser :many
+select
+  feed_follows.user_id, feed_follows.feed_id, feed_follows.created_at, feed_follows.updated_at,
+  users.name as username,
+  feeds.name as feedname
+from
+  feed_follows
+  inner join users on users.id = feed_follows.user_id
+  and users.name = $1
+  inner join feeds on feeds.id = feed_follows.feed_id
+`
+
+type GetFeedFollowsForUserRow struct {
+	UserID    uuid.UUID
+	FeedID    uuid.UUID
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Username  string
+	Feedname  string
+}
+
+func (q *Queries) GetFeedFollowsForUser(ctx context.Context, name string) ([]GetFeedFollowsForUserRow, error) {
+	rows, err := q.db.QueryContext(ctx, getFeedFollowsForUser, name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetFeedFollowsForUserRow
+	for rows.Next() {
+		var i GetFeedFollowsForUserRow
+		if err := rows.Scan(
+			&i.UserID,
+			&i.FeedID,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.Username,
+			&i.Feedname,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

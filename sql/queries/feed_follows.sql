@@ -16,3 +16,14 @@ from
   inserted_feed_follow
   inner join users on users.id = inserted_feed_follow.user_id
   inner join feeds on feeds.id = inserted_feed_follow.feed_id;
+
+-- name: GetFeedFollowsForUser :many
+select
+  feed_follows.*,
+  users.name as username,
+  feeds.name as feedname
+from
+  feed_follows
+  inner join users on users.id = feed_follows.user_id
+  and users.name = $1
+  inner join feeds on feeds.id = feed_follows.feed_id;
