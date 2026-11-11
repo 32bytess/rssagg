@@ -9,6 +9,7 @@ import (
 	"github.com/32bytess/rss-agg/internal/cli"
 	"github.com/32bytess/rss-agg/internal/config"
 	"github.com/32bytess/rss-agg/internal/database"
+	"github.com/32bytess/rss-agg/internal/middlewares"
 
 	_ "github.com/lib/pq"
 )
@@ -37,10 +38,10 @@ func main() {
 	cmds.Register("reset", cli.HandlerReset)
 	cmds.Register("users", cli.HandlerUsers)
 	cmds.Register("agg", cli.HandlerAgg)
-	cmds.Register("addfeed", cli.HandlerAddFeed)
+	cmds.Register("addfeed", middlewares.MiddlewareLoggedIn(cli.HandlerAddFeed))
 	cmds.Register("feeds", cli.HandlerFeeds)
-	cmds.Register("follow", cli.HandlerFollow)
-	cmds.Register("following", cli.HandlerFollowing)
+	cmds.Register("follow", middlewares.MiddlewareLoggedIn(cli.HandlerFollow))
+	cmds.Register("following", middlewares.MiddlewareLoggedIn(cli.HandlerFollowing))
 
 	// get args (user input)
 	args := os.Args
@@ -56,7 +57,7 @@ func main() {
 	}
 	err = cmds.Run(&st, cmd)
 	if err != nil {
-		fmt.Printf("Err %v\n", err)
+		fmt.Printf("Err:\t %v\n", err)
 		os.Exit(1)
 	}
 }

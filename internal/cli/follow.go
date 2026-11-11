@@ -10,16 +10,12 @@ import (
 	"github.com/32bytess/rss-agg/internal/database"
 )
 
-func HandlerFollow(s *app.State, cmd Command) error {
+func HandlerFollow(s *app.State, cmd Command, user database.User) error {
 
 	if len(cmd.Args) != 1 {
 		return errors.New("the follow handler expects one argument, the url")
 	}
 	url := cmd.Args[0]
-	user, err := s.DB.GetUser(context.Background(), s.Config.CurrentUserName)
-	if err != nil {
-		return fmt.Errorf("user not found")
-	}
 	feed, err := s.DB.GetFeedByURL(context.Background(), url)
 	if err != nil {
 		return fmt.Errorf("there is no fieed with this url")

@@ -12,16 +12,12 @@ import (
 	"github.com/32bytess/rss-agg/internal/database"
 )
 
-func HandlerAddFeed(s *app.State, cmd Command) error {
+func HandlerAddFeed(s *app.State, cmd Command, user database.User) error {
 	if len(cmd.Args) != 2 {
 		return errors.New("the addfeed handler expects 2 argument, feedname and url")
 	}
 	name := cmd.Args[0]
 	url := cmd.Args[1]
-	user, err := s.DB.GetUser(context.Background(), s.Config.CurrentUserName)
-	if err != nil {
-		return err
-	}
 	feedParams := database.CreateFeedParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
