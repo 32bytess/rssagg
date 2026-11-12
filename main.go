@@ -43,6 +43,7 @@ func main() {
 	cmds.Register("follow", middlewares.MiddlewareLoggedIn(cli.HandlerFollow))
 	cmds.Register("following", middlewares.MiddlewareLoggedIn(cli.HandlerFollowing))
 	cmds.Register("unfollow", middlewares.MiddlewareLoggedIn(cli.HandlerUnfollow))
+	cmds.Register("browse", cli.HandlerBrowse)
 
 	// get args (user input)
 	args := os.Args

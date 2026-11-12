@@ -14,7 +14,7 @@ func HandlerReset(s *app.State, cmd Command) error {
 	}
 	err := s.DB.DeleteAllUsers(context.Background())
 	if err != nil {
-		return errors.New("reseting db failed")
+		return fmt.Errorf("reseting db failed: %w", err)
 	}
 	fmt.Println("reset db was successful")
 	return nil

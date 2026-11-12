@@ -7,7 +7,7 @@ create table posts (
   url text not null unique,
   description text,
   published_at timestamp,
-  feed_id uuid not null references feeds (id)
+  feed_id uuid not null references feeds (id) on delete cascade
 );
 
 -- +goose Down

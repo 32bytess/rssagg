@@ -8,6 +8,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -62,24 +63,38 @@ func (q *Queries) CreatePost(ctx context.Context, arg CreatePostParams) (Post, e
 
 const getPosts = `-- name: GetPosts :many
 select
-  id, created_at, updated_at, title, url, description, published_at, feed_id
+  posts.id, posts.created_at, posts.updated_at, posts.title, posts.url, posts.description, posts.published_at, posts.feed_id,
+  feeds.name as feed_name
 from
   posts
+  left join feeds on feed_id = feeds.id
 order by
   published_at desc
 limit
   $1
 `
 
-func (q *Queries) GetPosts(ctx context.Context, limit int32) ([]Post, error) {
+type GetPostsRow struct {
+	ID          uuid.UUID
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	Title       string
+	Url         string
+	Description sql.NullString
+	PublishedAt sql.NullTime
+	FeedID      uuid.UUID
+	FeedName    sql.NullString
+}
+
+func (q *Queries) GetPosts(ctx context.Context, limit int32) ([]GetPostsRow, error) {
 	rows, err := q.db.QueryContext(ctx, getPosts, limit)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Post
+	var items []GetPostsRow
 	for rows.Next() {
-		var i Post
+		var i GetPostsRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.CreatedAt,
@@ -89,6 +104,7 @@ func (q *Queries) GetPosts(ctx context.Context, limit int32) ([]Post, error) {
 			&i.Description,
 			&i.PublishedAt,
 			&i.FeedID,
+			&i.FeedName,
 		); err != nil {
 			return nil, err
 		}

@@ -15,9 +15,11 @@ returning
 
 -- name: GetPosts :many
 select
-  *
+  posts.*,
+  feeds.name as feed_name
 from
   posts
+  left join feeds on feed_id = feeds.id
 order by
   published_at desc
 limit
