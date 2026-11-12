@@ -2,12 +2,18 @@ package cli
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/32bytess/rss-agg/internal/app"
+	"github.com/32bytess/rss-agg/internal/database"
 	"github.com/32bytess/rss-agg/internal/rssapi"
+	"github.com/araddon/dateparse"
+	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 func HandlerAgg(s *app.State, cmd Command) error {
@@ -43,10 +49,29 @@ func scrapeFeeds(s *app.State) error {
 
 	feed, err := rssapi.FetchFeed(context.Background(), app.TestURL)
 	if err != nil {
-		return nil
+		return err
 	}
 	for _, item := range feed.Channel.Item {
-		fmt.Printf("- title: %s\n", item.Title)
+		publishedAt, err := dateparse.ParseAny(item.PubDate)
+		postParams := database.CreatePostParams{
+			ID:          uuid.New(),
+			Title:       item.Title,
+			Url:         item.Link,
+			Description: sql.NullString{String: item.Description, Valid: item.Description != ""},
+			PublishedAt: sql.NullTime{
+				Time:  publishedAt,
+				Valid: err == nil,
+			},
+			FeedID: fetchFeed.ID,
+		}
+		_, err = s.DB.CreatePost(context.Background(), postParams)
+		if err != nil {
+			var pqErr *pq.Error
+			if errors.As(err, &pqErr) && pqErr.Code == "23505" {
+				continue
+			}
+			log.Fatal("err : %w", err)
+		}
 	}
 	return nil
 }
