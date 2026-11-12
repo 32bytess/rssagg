@@ -2,8 +2,8 @@
 create table feed_follows (
   user_id uuid not null references users (id) on delete cascade,
   feed_id uuid not null references feeds (id) on delete cascade,
-  created_at timestamp not null,
-  updated_at timestamp not null,
+  created_at timestamp not null default now(),
+  updated_at timestamp not null default now(),
   primary key (user_id, feed_id)
 );
 

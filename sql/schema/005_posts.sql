@@ -1,0 +1,14 @@
+-- +goose Up
+create table posts (
+  id uuid primary key,
+  created_at timestamp not null default now(),
+  updated_at timestamp not null default now(),
+  title text not null,
+  url text not null unique,
+  description text,
+  published_at timestamp,
+  feed_id uuid not null references feeds (id)
+);
+
+-- +goose Down
+drop table posts;
