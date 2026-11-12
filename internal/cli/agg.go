@@ -8,9 +8,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/32bytess/rss-agg/internal/app"
-	"github.com/32bytess/rss-agg/internal/database"
-	"github.com/32bytess/rss-agg/internal/rssapi"
+	"github.com/32bytess/rssagg/internal/app"
+	"github.com/32bytess/rssagg/internal/database"
+	"github.com/32bytess/rssagg/internal/rssapi"
 	"github.com/araddon/dateparse"
 	"github.com/google/uuid"
 	"github.com/lib/pq"

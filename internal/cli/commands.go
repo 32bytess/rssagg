@@ -3,7 +3,7 @@ package cli
 import (
 	"errors"
 
-	"github.com/32bytess/rss-agg/internal/app"
+	"github.com/32bytess/rssagg/internal/app"
 )
 
 type Command struct {

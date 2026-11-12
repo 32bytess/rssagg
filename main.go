@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/32bytess/rss-agg/internal/app"
-	"github.com/32bytess/rss-agg/internal/cli"
-	"github.com/32bytess/rss-agg/internal/config"
-	"github.com/32bytess/rss-agg/internal/database"
-	"github.com/32bytess/rss-agg/internal/middlewares"
+	"github.com/32bytess/rssagg/internal/app"
+	"github.com/32bytess/rssagg/internal/cli"
+	"github.com/32bytess/rssagg/internal/config"
+	"github.com/32bytess/rssagg/internal/database"
+	"github.com/32bytess/rssagg/internal/middlewares"
 
 	_ "github.com/lib/pq"
 )
@@ -49,7 +49,7 @@ func main() {
 	args := os.Args
 
 	if len(args) < 2 {
-		fmt.Println("Usage: ./rss-agg <command>")
+		fmt.Println("Usage: ./rssagg <command>")
 		os.Exit(1)
 	}
 	// create new command

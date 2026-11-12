@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/32bytess/rss-agg/internal/app"
-	"github.com/32bytess/rss-agg/internal/database"
+	"github.com/32bytess/rssagg/internal/app"
+	"github.com/32bytess/rssagg/internal/database"
 )
 
 func HandlerUnfollow(s *app.State, cmd Command, user database.User) error {

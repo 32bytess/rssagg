@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/32bytess/rss-agg/internal/app"
+	"github.com/32bytess/rssagg/internal/app"
 )
 
 func HandlerBrowse(s *app.State, cmd Command) error {

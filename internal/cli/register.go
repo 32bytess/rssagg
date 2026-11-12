@@ -8,8 +8,8 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/32bytess/rss-agg/internal/app"
-	"github.com/32bytess/rss-agg/internal/database"
+	"github.com/32bytess/rssagg/internal/app"
+	"github.com/32bytess/rssagg/internal/database"
 )
 
 func HandlerRegister(s *app.State, cmd Command) error {

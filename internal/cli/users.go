@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/32bytess/rss-agg/internal/app"
+	"github.com/32bytess/rssagg/internal/app"
 )
 
 func HandlerUsers(s *app.State, cmd Command) error {

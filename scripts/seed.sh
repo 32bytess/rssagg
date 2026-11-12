@@ -6,8 +6,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-go build -o rss-agg .
-run() { ./rss-agg "$@"; }
+go build -o rssagg .
+run() { ./rssagg "$@"; }
 
 run reset
 
