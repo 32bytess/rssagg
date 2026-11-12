@@ -3,7 +3,6 @@ package cli
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/32bytess/rss-agg/internal/app"
 	"github.com/32bytess/rss-agg/internal/rssapi"
@@ -18,6 +17,6 @@ func HandlerAgg(s *app.State, cmd Command) error {
 	if err != nil {
 		return nil
 	}
-	fmt.Println(*feed)
+	feed.PrintDetails()
 	return nil
 }
